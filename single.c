@@ -1,13 +1,6 @@
-#include "concurrent.h"
-#include "splitCommand.c"
+#include "single.h"
 
-#include <unistd.h>
-#include <sys/wait.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h> 
-
-int concurrent(char *command) {
+int single(char *command, bool concurrent) {
     char *cmd = (char *)malloc(strlen(command) + 1);
 
     strcpy(cmd, command);
@@ -27,7 +20,11 @@ int concurrent(char *command) {
 
         free(args);
         free(cmd);
-        return 0;
+        exit(0);
+    }
+
+    if (!concurrent) {
+        waitpid(pid, NULL, 0);
     }
 
     free(args);
