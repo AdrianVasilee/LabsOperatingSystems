@@ -1,5 +1,10 @@
 #include "single.h"
 
+/* 
+This code works for both Single and Concurrent execution
+of programs
+*/
+
 int single(char *command, bool concurrent) {
     char *cmd = (char *)malloc(strlen(command) + 1);
 
