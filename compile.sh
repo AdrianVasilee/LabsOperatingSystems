@@ -1,9 +1,9 @@
-#!/bin/bash
+#!bin/bash
 
-gcc -o main.exe src/main.c
+gcc src/main.c -o main
 
 if [ $? -eq 0 ]; then
-    echo "Compilation successful: main.exe created."
+    echo "Compilation successful: main created."
 else
     echo "Compilation failed."
 fi
