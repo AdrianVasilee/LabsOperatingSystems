@@ -36,6 +36,7 @@ void * thread_function(void * info) {
 
     close(fd);
 
+    free(buffer);
     free(tInfo);
 
     return (void *) histogram;
@@ -104,6 +105,9 @@ int main(int argc, char* argv[]) {
         write(fd_out, s, strlen(s));
     }
     close(fd_out);
+
+    free(threads);
+    free(totalHistogram);
 
     return 0;
 }
