@@ -1,3 +1,5 @@
+#include "producer.h"
+
 #include <ctype.h>
 #include <fcntl.h>
 #include <pthread.h>
@@ -6,49 +8,52 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "parsePGM.c"
+#include "consumer.h"
+#include "parsePGM.h"
 #define BLOCK_SIZE (1024 * 16)
 #define HIST_SIZE 256
 
 // what each buffer slot stores
-typedef struct {
-  unsigned char* data;
-  int nbytes;
-} Block;
+// typedef struct {
+//   unsigned char* data;
+//   int nbytes;
+// } Block;
 
-typedef struct {
-  Block* buffer;
-  int capacity;
-  int in;                // where next producer puts info
-  int out;               // where consumer removes data
-  int count;             // how many blocks are being used
-  pthread_mutex_t lock;  // protect shared buffer state
-  pthread_cond_t full;   // producers wait here
-  pthread_cond_t empty;  // consumers wait here
-} CircularBuffer;
+// typedef struct {
+//   Block* buffer;
+//   int capacity;
+//   int in;                // where next producer puts info
+//   int out;               // where consumer removes data
+//   int count;             // how many blocks are being used
+//   pthread_mutex_t lock;  // protect shared buffer state
+//   pthread_cond_t full;   // producers wait here
+//   pthread_cond_t empty;  // consumers wait here
+// } CircularBuffer;
 
-// global shared state
+// // global shared state
 
-static CircularBuffer cb;
+// static CircularBuffer cb;
 
-static int histogram[HIST_SIZE];
-static pthread_mutex_t hist_lock =
-    PTHREAD_MUTEX_INITIALIZER;  // protects updates so there's no race
-                                // conditions if two+ consumers try to add info
-                                // to histogram at the same time
+// static int histogram[HIST_SIZE];
+// static pthread_mutex_t hist_lock =
+//     PTHREAD_MUTEX_INITIALIZER;  // protects updates so there's no race
+//                                 // conditions if two+ consumers try to add
+//                                 info
+//                                 // to histogram at the same time
 
-// shared read position for when multiple producers
-static int readPos;
-static int endPos;
-static pthread_mutex_t read_lock =
-    PTHREAD_MUTEX_INITIALIZER;  // solve race condition for when 2 producers
-                                // could read same readPos before incrementing
+// // shared read position for when multiple producers
+// static int readPos;
+// static int endPos;
+// static pthread_mutex_t read_lock =
+//     PTHREAD_MUTEX_INITIALIZER;  // solve race condition for when 2 producers
+//                                 // could read same readPos before
+//                                 incrementing
 
-// producers still running
-static int active_producers;
-static pthread_mutex_t prod_lock = PTHREAD_MUTEX_INITIALIZER;
+// // producers still running
+// static int active_producers;
+// static pthread_mutex_t prod_lock = PTHREAD_MUTEX_INITIALIZER;
 
-static const char* input_path;
+// static const char* input_path;
 
 void* producer_thread(void* arg) {
   (void)arg;
@@ -97,10 +102,10 @@ void* producer_thread(void* arg) {
 
     lseek(fd, myPos, SEEK_SET);
     int nBytesRead = read(fd, buff, toRead);
-    if (nBytesRead <= 0) {
-      free(buff);
-      break;
-    }
+    // if (nBytesRead <= 0) {
+    //   free(buff);
+    //   break;
+    // }
 
     buffer_put(&cb, buff, nBytesRead);
   }
