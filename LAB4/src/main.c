@@ -20,7 +20,9 @@ int main(int argc, char *argv[]) {
     int width, height;
     int nBytesHeader = parse_pgm_header(argv[1], &width, &height, &maxval);
 
-    if (maxval > 255){
+    maxval ++;
+
+    if (maxval > 256){
         perror("Expecting 1 byte ints\n");
         _exit(1);
     }
@@ -52,7 +54,7 @@ int main(int argc, char *argv[]) {
     unsigned int * totalHistogram = malloc(maxval * sizeof(unsigned int));
 
     for (int i = 0; i < maxval; i++)
-        totalHistogram[i] == 0;
+        totalHistogram[i] = 0;
 
     for (int i = 0; i < nrConsumers; i++) {
         unsigned int * histogram;

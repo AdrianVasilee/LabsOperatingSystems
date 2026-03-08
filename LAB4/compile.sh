@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc src/main.c -o a.out
+gcc src/main.c -Wall -o myProgram

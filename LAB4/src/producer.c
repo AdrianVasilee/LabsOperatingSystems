@@ -48,4 +48,5 @@ void * Producer (void* arg) {
     producersFinished = 1;
     // If exiting, make sure you wake up all sleeping threads before exiting 
     // (and that they don't go to sleep if the finishes)
+    return 0;
 }
